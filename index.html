@@ -5,16 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dynamic Quote Generator</title>
 </head>
-<body>
-  <h1>Dynamic Quote Generator</h1>
+<body style="font-family: Arial, sans-serif; background: #f4f7fc; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: 100vh;">
 
-  <div id="quoteDisplay"></div>
-  <button id="newQuote">Show New Quote</button>
+  <div style="background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); width: 90%; max-width: 500px; text-align: center;">
+    
+    <h1 style="color: #333; margin-bottom: 20px;">Dynamic Quote Generator</h1>
 
-  <div>
-    <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
-    <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
-    <button id="addQuoteBtn">Add Quote</button>
+    <!-- Quote display area -->
+    <div id="quoteDisplay" style="font-size: 18px; font-style: italic; color: #444; background: #f9f9f9; border-left: 5px solid #007bff; padding: 15px; margin-bottom: 20px; border-radius: 8px;">
+      <!-- Random quote will appear here -->
+    </div>
+
+    <!-- Button to show new quote -->
+    <button id="newQuote" 
+      style="background-color: #007bff; color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-size: 15px; transition: background-color 0.3s ease;">
+      Show New Quote
+    </button>
+
+    <!-- Form to add new quotes -->
+    <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+      <input id="newQuoteText" type="text" placeholder="Enter a new quote" 
+        style="padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px;">
+      <input id="newQuoteCategory" type="text" placeholder="Enter quote category" 
+        style="padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px;">
+      <button id="addQuoteBtn" 
+        style="background-color: #007bff; color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-size: 15px; transition: background-color 0.3s ease;">
+        Add Quote
+      </button>
+    </div>
+
   </div>
 
   <script src="script.js"></script>
