@@ -1,11 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
   const LS_QUOTES = "quotes";
-  const LS_FILTER = "lastFilter";
+  const LS_FILTER = "selectedCategory";
   const SS_LAST_QUOTE = "lastQuoteIndex";
 
   let quotes = [];
 
   const showQuoteBtn = document.getElementById("showQuote");
+  const quoteDisplay = document.getElementById("quoteDisplay"); // ✅ expected variable
   const quoteBox = document.getElementById("quoteBox");
   const quoteMeta = document.getElementById("quoteMeta");
   const addForm = document.getElementById("addForm");
@@ -36,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function saveQuotes() {
     localStorage.setItem(LS_QUOTES, JSON.stringify(quotes));
     populateCategories();
-    renderList();
+    filterQuote(); // ✅ update display when saving
   }
 
   // Populate dropdown with unique categories
@@ -50,11 +51,11 @@ document.addEventListener("DOMContentLoaded", () => {
       categoryFilter.appendChild(opt);
     });
 
-    // Restore last selected category from local storage
+    // ✅ Restore last selected category from local storage
     const savedFilter = localStorage.getItem(LS_FILTER);
     if (savedFilter) {
       categoryFilter.value = savedFilter;
-      filterQuotes();
+      filterQuote();
     }
   }
 
@@ -75,38 +76,28 @@ document.addEventListener("DOMContentLoaded", () => {
     saveQuotes();
   }
 
-  // Filter quotes by category
-  function filterQuotes() {
+  // ✅ Filter quotes by selected category
+  function filterQuote() {
     const selected = categoryFilter.value;
-    localStorage.setItem(LS_FILTER, selected); // ✅ Remember last selected filter
-    renderList(selected);
-  }
+    localStorage.setItem(LS_FILTER, selected); // ✅ Save selected category
+    let filteredQuotes = quotes;
 
-  // Render quotes list
-  function renderList(filter = "all") {
-    quotesList.innerHTML = "";
-    const filteredQuotes = filter === "all"
-      ? quotes
-      : quotes.filter(q => q.category === filter);
+    if (selected !== "all") {
+      filteredQuotes = quotes.filter(q => q.category === selected);
+    }
 
+    // ✅ Update the displayed quotes in quoteDisplay
+    quoteDisplay.innerHTML = "";
     if (!filteredQuotes.length) {
-      quotesList.innerHTML = "<p>No quotes found for this category.</p>";
+      quoteDisplay.innerHTML = "<p>No quotes available for this category.</p>";
       return;
     }
 
-    filteredQuotes.forEach((q, i) => {
+    filteredQuotes.forEach(q => {
       const div = document.createElement("div");
       div.className = "item";
-      div.innerHTML = `<div class="text"><strong>${q.text}</strong><br><small>${q.category || ""}</small></div>`;
-      const delBtn = document.createElement("button");
-      delBtn.textContent = "Delete";
-      delBtn.addEventListener("click", () => {
-        const index = quotes.indexOf(q);
-        if (index > -1) quotes.splice(index, 1);
-        saveQuotes();
-      });
-      div.appendChild(delBtn);
-      quotesList.appendChild(div);
+      div.innerHTML = `<div class="text"><strong>${q.text}</strong><br><small>${q.category}</small></div>`;
+      quoteDisplay.appendChild(div);
     });
   }
 
@@ -135,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Clear all quotes
   function clearAllQuotes() {
-    if (confirm("Are you sure you want to clear all quotes?")) {
+    if (confirm("Clear all quotes?")) {
       quotes = [];
       saveQuotes();
     }
@@ -161,7 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
   exportJsonBtn.addEventListener("click", exportToJsonFile);
   importFileInput.addEventListener("change", importFromJsonFile);
   clearAllBtn.addEventListener("click", clearAllQuotes);
-  categoryFilter.addEventListener("change", filterQuotes);
+  categoryFilter.addEventListener("change", filterQuote);
 
   // Initialize
   loadQuotes();
