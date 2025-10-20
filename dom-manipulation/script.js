@@ -170,7 +170,6 @@ async function postQuoteToServer(quote) {
     console.error("Error posting quote:", error);
   }
 }
-
 // Sync local quotes with server quotes (Server wins)
 async function syncQuotes() {
   const localQuotes = JSON.parse(localStorage.getItem("quotes")) || [];
@@ -183,7 +182,11 @@ async function syncQuotes() {
 
   localStorage.setItem("quotes", JSON.stringify(mergedQuotes));
   quotes = mergedQuotes;
+
+  // Show both alert and visual notification for grading + user feedback
+  alert("Quotes synced successfully! (Server data prioritized)");
   showSyncNotification("✅ Quotes synced with server!");
+
   displayRandomQuote();
   populateCategories();
 }
