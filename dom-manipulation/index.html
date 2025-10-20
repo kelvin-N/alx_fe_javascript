@@ -1,41 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dynamic Quote Generator</title>
+  <style>
+    :root { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+    body { max-width: 900px; margin: 36px auto; padding: 16px; background: #f7fafc; color: #0f172a; }
+    header { display:flex; gap:12px; align-items:center; }
+    h1 { margin:0; font-size:1.35rem; }
+    .card { background: white; border-radius: 12px; padding: 14px; box-shadow: 0 6px 18px rgba(2,6,23,0.06); margin-top: 16px; }
+    .controls { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+    button { border:0; padding:8px 12px; border-radius:8px; cursor:pointer; font-weight:600; }
+    button.primary{ background:#0369a1; color:white; }
+    button.ghost{ background:transparent; border:1px solid #cbd5e1; }
+    label{ font-size:0.9rem; display:block; margin-top:10px; }
+    input[type="text"], textarea { width:100%; padding:8px; border-radius:8px; border:1px solid #e2e8f0; margin-top:6px; }
+    .quote-box { font-size:1.05rem; padding:16px; border-radius:10px; background:linear-gradient(180deg,#eef2ff, #fff); margin-top:12px; min-height:66px; }
+    .meta { margin-top:8px; font-size:0.85rem; color:#475569; }
+    .small { font-size:0.85rem; }
+    .list { margin-top:12px; display:grid; gap:8px; }
+    .item { padding:8px; border-radius:8px; border:1px dashed #e6eef8; display:flex; justify-content:space-between; gap:8px; align-items:center; }
+    .item .text { flex:1; }
+    .danger { background:#fee2e2; }
+    footer{ margin-top:18px; font-size:0.85rem; color:#475569; }
+    @media (min-width:700px){ .controls { justify-content:flex-start } }
+  </style>
 </head>
-<body style="font-family: Arial, sans-serif; background: #f4f7fc; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: 100vh;">
+<body>
+  <header>
+    <h1>Dynamic Quote Generator</h1>
+    <div class="small">(LocalStorage + SessionStorage + JSON Import/Export)</div>
+  </header>
 
-  <div style="background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); width: 90%; max-width: 500px; text-align: center;">
-    
-    <h1 style="color: #333; margin-bottom: 20px;">Dynamic Quote Generator</h1>
-
-    <!-- Quote display area -->
-    <div id="quoteDisplay" style="font-size: 18px; font-style: italic; color: #444; background: #f9f9f9; border-left: 5px solid #007bff; padding: 15px; margin-bottom: 20px; border-radius: 8px;">
-      <!-- Random quote will appear here -->
+  <div class="card">
+    <div>
+      <button id="showQuote" class="primary">Show New Quote</button>
+      <button id="exportJson" class="ghost">Export Quotes (JSON)</button>
+      <label for="importFile" class="ghost" style="display:inline-block; padding:8px 12px; border-radius:8px; cursor:pointer; margin-left:6px;">Import Quotes (JSON)</label>
+      <input type="file" id="importFile" accept=".json,application/json" style="display:none" />
     </div>
 
-    <!-- Button to show new quote -->
-    <button id="newQuote" 
-      style="background-color: #007bff; color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-size: 15px; transition: background-color 0.3s ease;">
-      Show New Quote
-    </button>
+    <div class="quote-box" id="quoteBox">Press "Show New Quote" to begin.</div>
+    <div class="meta" id="quoteMeta"></div>
 
-    <!-- Form to add new quotes -->
-    <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
-      <input id="newQuoteText" type="text" placeholder="Enter a new quote" 
-        style="padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px;">
-      <input id="newQuoteCategory" type="text" placeholder="Enter quote category" 
-        style="padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px;">
-      <button id="addQuoteBtn" 
-        style="background-color: #007bff; color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-size: 15px; transition: background-color 0.3s ease;">
-        Add Quote
-      </button>
-    </div>
+    <hr style="margin-top:14px;margin-bottom:14px" />
 
+    <form id="addForm">
+      <label for="quoteText">Quote text</label>
+      <textarea id="quoteText" rows="3" placeholder="Write a new quote..." required></textarea>
+      <label for="quoteCategory">Category (optional)</label>
+      <input type="text" id="quoteCategory" placeholder="e.g. inspiration, humor" />
+      <div class="controls">
+        <button type="submit" class="primary">Add Quote</button>
+        <button type="button" id="clearAll" class="ghost">Clear All Quotes</button>
+      </div>
+    </form>
+
+    <div class="list" id="quotesList"></div>
+
+    <footer>
+      <div>Notes:</div>
+      <ul>
+        <li>Quotes are saved in <strong>localStorage</strong> (key: <code>quotes</code>).</li>
+        <li>Last viewed quote index is stored in <strong>sessionStorage</strong> (key: <code>lastQuoteIndex</code>).</li>
+      </ul>
+    </footer>
   </div>
 
+  <!-- Link to external JavaScript -->
   <script src="script.js"></script>
 </body>
 </html>
