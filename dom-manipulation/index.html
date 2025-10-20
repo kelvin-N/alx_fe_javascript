@@ -1,83 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dynamic Quote Generator with Category Filter</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dynamic Quote Generator</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 40px;
-      background: #f5f5f5;
+      background-color: #f9f9f9;
       color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
     }
     h1 {
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+    #quoteDisplay {
+      font-size: 1.3em;
+      font-style: italic;
       text-align: center;
-      margin-bottom: 20px;
+      margin: 20px 0;
+      background: #fff;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      min-height: 60px;
+      width: 80%;
+      max-width: 600px;
+    }
+    .btn {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      margin: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s ease;
+    }
+    .btn:hover {
+      background-color: #2980b9;
+    }
+    input, select {
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin: 5px;
+      width: 200px;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+    }
+    #importQuotes {
+      display: none;
     }
     .container {
-      max-width: 600px;
-      margin: 0 auto;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    button, select, input {
-      padding: 10px;
-      margin: 5px 0;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    .quote-box {
-      background: #eef;
-      padding: 15px;
-      border-radius: 10px;
-      margin-top: 10px;
-    }
-    .item {
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
       align-items: center;
-      padding: 8px;
-      background: #fafafa;
-      margin-bottom: 5px;
-      border-radius: 5px;
     }
-    .text {
-      flex: 1;
+    .actions {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    footer {
+      margin-top: auto;
+      font-size: 0.9em;
+      color: #777;
     }
   </style>
 </head>
 <body>
+
+  <h1>Dynamic Quote Generator</h1>
+
+  <div id="quoteDisplay">Loading quotes...</div>
+
+  <div class="actions">
+    <button id="showNewQuote" class="btn">Show New Quote</button>
+    <button id="exportQuotes" class="btn">Export Quotes (JSON)</button>
+    <label for="importQuotes" class="btn" style="background-color:#16a085;">Import Quotes</label>
+    <input type="file" id="importQuotes" accept=".json" />
+  </div>
+
   <div class="container">
-    <h1>Dynamic Quote Generator</h1>
-    <button id="showQuote">Show New Quote</button>
-    <div class="quote-box">
-      <p id="quoteBox">Click "Show New Quote" to display a quote</p>
-      <p id="quoteMeta"></p>
-    </div>
+    <label for="newQuoteText">Add New Quote:</label>
+    <input type="text" id="newQuoteText" placeholder="Enter quote text" />
+    <input type="text" id="newQuoteCategory" placeholder="Enter quote category" />
+    <button id="addQuote" class="btn">Add Quote</button>
+  </div>
 
-    <h3>Add a New Quote</h3>
-    <form id="addForm">
-      <input type="text" id="quoteText" placeholder="Enter quote text" required>
-      <input type="text" id="quoteCategory" placeholder="Enter category (e.g. motivation)">
-      <button type="submit">Add Quote</button>
-    </form>
-
-    <h3>Filter by Category</h3>
+  <div class="container">
+    <label for="categoryFilter">Filter by Category:</label>
     <select id="categoryFilter">
       <option value="all">All Categories</option>
     </select>
-
-    <h3>Saved Quotes</h3>
-    <div id="quotesList"></div>
-
-    <hr>
-    <button id="exportJson">Export Quotes (JSON)</button>
-    <input type="file" id="importFile" accept=".json" />
-    <button id="clearAll">Clear All Quotes</button>
   </div>
+
+  <footer>Quotes are synced periodically with a mock server.</footer>
 
   <script src="script.js"></script>
 </body>
