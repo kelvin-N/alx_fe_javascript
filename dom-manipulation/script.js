@@ -138,49 +138,33 @@ async function syncQuotes() {
     const response = await fetch("https://jsonplaceholder.typicode.com/posts");
     const serverQuotes = await response.json();
 
-    // Example syncing logic (you can customize this)
+    // Example: Save only a few quotes for demo purposes
     localStorage.setItem("quotes", JSON.stringify(serverQuotes.slice(0, 10)));
 
-    // ✅ Create on-screen notification
+    // 🌟 Create a stylish success message on-screen
     const notification = document.createElement("div");
     notification.textContent = "✅ Quotes synced with server!";
-    notification.style.position = "fixed";
-    notification.style.top = "20px";
-    notification.style.right = "20px";
     notification.style.backgroundColor = "#4CAF50";
     notification.style.color = "white";
-    notification.style.padding = "12px 16px";
+    notification.style.padding = "12px 20px";
+    notification.style.position = "fixed";
+    notification.style.top = "15px";
+    notification.style.right = "15px";
     notification.style.borderRadius = "8px";
+    notification.style.boxShadow = "0 2px 8px rgba(0,0,0,0.3)";
     notification.style.fontFamily = "Arial, sans-serif";
-    notification.style.boxShadow = "0 2px 10px rgba(0,0,0,0.2)";
-    notification.style.zIndex = "9999";
+    notification.style.zIndex = "1000";
+    notification.style.transition = "opacity 0.5s ease";
+
     document.body.appendChild(notification);
 
-    // Remove after 3 seconds
+    // ✨ Fade out smoothly after 3 seconds
     setTimeout(() => {
-      notification.remove();
+      notification.style.opacity = "0";
+      setTimeout(() => notification.remove(), 500);
     }, 3000);
   } catch (error) {
-    console.error("Error syncing quotes:", error);
-
-    // ⚠️ Error notification
-    const errorNotice = document.createElement("div");
-    errorNotice.textContent = "⚠️ Failed to sync quotes.";
-    errorNotice.style.position = "fixed";
-    errorNotice.style.top = "20px";
-    errorNotice.style.right = "20px";
-    errorNotice.style.backgroundColor = "#f44336";
-    errorNotice.style.color = "white";
-    errorNotice.style.padding = "12px 16px";
-    errorNotice.style.borderRadius = "8px";
-    errorNotice.style.fontFamily = "Arial, sans-serif";
-    errorNotice.style.boxShadow = "0 2px 10px rgba(0,0,0,0.2)";
-    errorNotice.style.zIndex = "9999";
-    document.body.appendChild(errorNotice);
-
-    setTimeout(() => {
-      errorNotice.remove();
-    }, 3000);
+    console.error("❌ Error syncing quotes:", error);
   }
 }
 
