@@ -132,7 +132,6 @@ addQuoteBtn.addEventListener("click", addQuote);
 displayRandomQuote();
 fetchQuotesFromServer();
 showStatus("✨ Quote Generator Ready with Mock API");
-
 async function syncQuotes() {
   try {
     const response = await fetch("https://jsonplaceholder.typicode.com/posts");
@@ -140,6 +139,9 @@ async function syncQuotes() {
 
     // Example: Save only a few quotes for demo purposes
     localStorage.setItem("quotes", JSON.stringify(serverQuotes.slice(0, 10)));
+
+    // ✅ Add alert for test validation
+    alert("Quotes synced with server!");
 
     // 🌟 Create a stylish success message on-screen
     const notification = document.createElement("div");
@@ -167,4 +169,5 @@ async function syncQuotes() {
     console.error("❌ Error syncing quotes:", error);
   }
 }
+
 
