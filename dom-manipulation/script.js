@@ -1,5 +1,5 @@
 // ==============================
-// Dynamic Quote Generator with Server Sync & Conflict Resolution
+// Dynamic Quote Generator with Server Sync & Conflict Resolution (Async + Mock API)
 // ==============================
 
 // Initialize quotes array
@@ -26,7 +26,7 @@ function displayRandomQuote() {
 }
 
 // ==============================
-// Add a New Quote
+// Add a New Quote (Local)
 // ==============================
 function addQuote() {
   const text = prompt("Enter the quote:");
@@ -36,65 +36,70 @@ function addQuote() {
     quotes.push(newQuote);
     localStorage.setItem('quotes', JSON.stringify(quotes));
     showStatus("✅ New quote added locally!");
+    syncQuotes(); // auto-sync after adding
   }
 }
 
 // ==============================
-// Sync Quotes with Server
+// Fetch Quotes from Mock API (GET)
 // ==============================
-function syncQuotes() {
-  showStatus("🔄 Syncing quotes with server...");
-  fetch('https://example.com/api/quotes', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(quotes)
-  })
-  .then(response => response.json())
-  .then(serverData => {
-    // Merge and resolve conflicts (prefer server updates)
-    updateLocalStorage(serverData);
-    showStatus("✅ Quotes successfully synced with server!");
-  })
-  .catch(error => {
-    console.error('Error syncing quotes:', error);
-    showStatus("⚠️ Failed to sync with server. Will retry later.");
-  });
+async function fetchQuotesFromServer() {
+  try {
+    const response = await fetch("https://jsonplaceholder.typicode.com/posts");
+    const serverData = await response.json();
+
+    // Convert mock posts to quote-like objects
+    const serverQuotes = serverData.slice(0, 5).map(post => ({
+      text: post.title,
+      category: "Server"
+    }));
+
+    updateLocalStorage(serverQuotes);
+    showStatus("🔔 Quotes updated from mock API server!");
+  } catch (error) {
+    console.error("Error fetching quotes:", error);
+    showStatus("⚠️ Failed to fetch quotes from server.");
+  }
 }
 
 // ==============================
-// Fetch Latest Quotes from Server
+// Sync Quotes to Mock API (POST)
 // ==============================
-function fetchQuotesFromServer() {
-  fetch('https://example.com/api/quotes')
-    .then(response => response.json())
-    .then(serverQuotes => {
-      updateLocalStorage(serverQuotes);
-      showStatus("🔔 Quotes updated from server!");
-    })
-    .catch(error => {
-      console.error('Error fetching quotes:', error);
+async function syncQuotes() {
+  try {
+    showStatus("🔄 Syncing quotes with mock API server...");
+    const response = await fetch("https://jsonplaceholder.typicode.com/posts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(quotes)
     });
+
+    const data = await response.json();
+    console.log("Server sync response:", data);
+    showStatus("✅ Quotes successfully synced with mock API server!");
+  } catch (error) {
+    console.error("Error syncing quotes:", error);
+    showStatus("⚠️ Could not sync with server. Will retry later.");
+  }
 }
 
 // ==============================
 // Update Local Storage with Conflict Resolution
 // ==============================
 function updateLocalStorage(serverQuotes) {
-  const localQuotes = JSON.parse(localStorage.getItem('quotes')) || [];
-  const mergedQuotes = [];
+  const localQuotes = JSON.parse(localStorage.getItem("quotes")) || [];
+  const merged = [...localQuotes];
 
-  // Simple conflict resolution: prefer server data for matching texts
+  // Merge server quotes without duplicates (by text)
   serverQuotes.forEach(serverQuote => {
     const exists = localQuotes.find(q => q.text === serverQuote.text);
-    if (!exists) mergedQuotes.push(serverQuote);
+    if (!exists) merged.push(serverQuote);
   });
 
-  // Combine both
-  const finalQuotes = [...localQuotes, ...mergedQuotes];
-  localStorage.setItem('quotes', JSON.stringify(finalQuotes));
-  quotes = finalQuotes;
+  localStorage.setItem("quotes", JSON.stringify(merged));
+  quotes = merged;
   displayRandomQuote();
 }
 
@@ -110,17 +115,20 @@ function showStatus(message) {
 }
 
 // ==============================
-// Periodically Sync with Server
+// Periodic Sync & Fetch
 // ==============================
-setInterval(fetchQuotesFromServer, 60000); // every 60 seconds
-setInterval(syncQuotes, 120000); // sync every 2 minutes
+setInterval(fetchQuotesFromServer, 60000); // every 1 min
+setInterval(syncQuotes, 120000); // every 2 min
 
 // ==============================
 // Event Listeners
 // ==============================
-newQuoteBtn.addEventListener('click', displayRandomQuote);
-addQuoteBtn.addEventListener('click', addQuote);
+newQuoteBtn.addEventListener("click", displayRandomQuote);
+addQuoteBtn.addEventListener("click", addQuote);
 
-// Initial display
+// ==============================
+// Initial Load
+// ==============================
 displayRandomQuote();
-showStatus("✨ Quote Generator Ready");
+fetchQuotesFromServer();
+showStatus("✨ Quote Generator Ready with Mock API");
