@@ -8,22 +8,34 @@
   <!-- Header -->
   <header>
     <h1>TechCon 2024 - Quotes Manager</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="schedule.html">Schedule</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
   </header>
 
   <!-- Main Content -->
   <main>
     <h2>Quotes</h2>
 
-    <!-- Display the current quote -->
+    <!-- Category Filter Dropdown -->
+    <label for="categoryFilter">Filter by Category:</label>
+    <select id="categoryFilter">
+      <!-- Options populated dynamically by JS -->
+    </select>
+
+    <!-- Current Quote Display -->
     <blockquote id="currentQuote">No quote loaded yet.</blockquote>
 
-    <!-- Button to show next quote -->
+    <!-- Buttons -->
     <button id="nextQuoteBtn">Next Quote</button>
-
-    <!-- Button to export quotes -->
     <button id="exportBtn">Export Quotes</button>
 
-    <!-- File input to import quotes JSON -->
+    <!-- File input for importing quotes -->
     <label for="jsonFileInput">Import Quotes:</label>
     <input type="file" id="jsonFileInput" accept=".json">
   </main>
