@@ -1,114 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dynamic Quote Generator</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
-      color: #333;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      height: 100vh;
-      margin: 0;
-      padding: 20px;
-    }
-    h1 {
-      color: #2c3e50;
-      margin-bottom: 10px;
-    }
-    #quoteDisplay {
-      font-size: 1.3em;
-      font-style: italic;
-      text-align: center;
-      margin: 20px 0;
-      background: #fff;
-      border-radius: 10px;
-      padding: 15px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      min-height: 60px;
-      width: 80%;
-      max-width: 600px;
-    }
-    .btn {
-      background-color: #3498db;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 6px;
-      margin: 5px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: 0.3s ease;
-    }
-    .btn:hover {
-      background-color: #2980b9;
-    }
-    input, select {
-      padding: 8px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      margin: 5px;
-      width: 200px;
-    }
-    label {
-      font-weight: bold;
-      margin-top: 10px;
-      display: block;
-    }
-    #importQuotes {
-      display: none;
-    }
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .actions {
-      margin-top: 10px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    footer {
-      margin-top: auto;
-      font-size: 0.9em;
-      color: #777;
-    }
-  </style>
+  <meta charset="utf-8">
+  <title>TechCon 2024 - JSON Import/Export</title>
 </head>
 <body>
+  <!-- Header -->
+  <header>
+    <h1>TechCon 2024 Data Management</h1>
+  </header>
 
-  <h1>Dynamic Quote Generator</h1>
+  <!-- Main Content -->
+  <main>
+    <h2>Manage JSON Data</h2>
 
-  <div id="quoteDisplay">Loading quotes...</div>
+    <!-- File input to import JSON -->
+    <label for="jsonFileInput">Import JSON File:</label>
+    <input type="file" id="jsonFileInput" accept=".json">
 
-  <div class="actions">
-    <button id="showNewQuote" class="btn">Show New Quote</button>
-    <button id="exportQuotes" class="btn">Export Quotes (JSON)</button>
-    <label for="importQuotes" class="btn" style="background-color:#16a085;">Import Quotes</label>
-    <input type="file" id="importQuotes" accept=".json" />
-  </div>
+    <!-- Button to export JSON -->
+    <button id="exportBtn">Export JSON</button>
 
-  <div class="container">
-    <label>Add New Quote:</label>
-    <!-- Dynamic form will be injected here by createAddQuoteForm() -->
-    <div id="addQuoteContainer"></div>
-  </div>
+    <!-- Display imported JSON -->
+    <h3>Imported Data:</h3>
+    <pre id="displayData">No data imported yet.</pre>
+  </main>
 
-  <div class="container">
-    <label for="categoryFilter">Filter by Category:</label>
-    <select id="categoryFilter">
-      <option value="all">All Categories</option>
-    </select>
-  </div>
+  <!-- Footer -->
+  <footer>
+    <p>copyright © 2024 Kelvin N. All rights reserved.</p>
+  </footer>
 
-  <footer>Quotes are synced periodically with a mock server.</footer>
-
+  <!-- Script -->
   <script src="script.js"></script>
 </body>
 </html>
