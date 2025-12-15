@@ -2,28 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>TechCon 2024 - JSON Import/Export</title>
+  <title>TechCon 2024 - Quotes Manager</title>
 </head>
 <body>
   <!-- Header -->
   <header>
-    <h1>TechCon 2024 Data Management</h1>
+    <h1>TechCon 2024 - Quotes Manager</h1>
   </header>
 
   <!-- Main Content -->
   <main>
-    <h2>Manage JSON Data</h2>
+    <h2>Quotes</h2>
 
-    <!-- File input to import JSON -->
-    <label for="jsonFileInput">Import JSON File:</label>
+    <!-- Display the current quote -->
+    <blockquote id="currentQuote">No quote loaded yet.</blockquote>
+
+    <!-- Button to show next quote -->
+    <button id="nextQuoteBtn">Next Quote</button>
+
+    <!-- Button to export quotes -->
+    <button id="exportBtn">Export Quotes</button>
+
+    <!-- File input to import quotes JSON -->
+    <label for="jsonFileInput">Import Quotes:</label>
     <input type="file" id="jsonFileInput" accept=".json">
-
-    <!-- Button to export JSON -->
-    <button id="exportBtn">Export JSON</button>
-
-    <!-- Display imported JSON -->
-    <h3>Imported Data:</h3>
-    <pre id="displayData">No data imported yet.</pre>
   </main>
 
   <!-- Footer -->
