@@ -8,8 +8,8 @@ let quotes = [
 
 let currentCategory = localStorage.getItem("selectedCategory") || "All";
 
-// ---------------- Quote Display ----------------
-function displayRandomQuote() {
+// ---------------- Show Random Quote ----------------
+function showRandomQuote() {
   const filteredQuotes = quotes.filter(q => currentCategory === "All" || q.category === currentCategory);
   const quoteDisplay = document.getElementById("currentQuote");
   if (!quoteDisplay) return;
@@ -22,7 +22,19 @@ function displayRandomQuote() {
   const randomIndex = Math.floor(Math.random() * filteredQuotes.length);
   quoteDisplay.textContent = filteredQuotes[randomIndex].text;
 
+  // Save last viewed quote to sessionStorage
   sessionStorage.setItem("lastViewedQuoteIndex", randomIndex);
+}
+
+// ---------------- Add New Quote ----------------
+function addQuote(newQuoteText, category = "General") {
+  if (!newQuoteText) return;
+  const newQuote = { text: newQuoteText, category };
+  quotes.push(newQuote);
+  localStorage.setItem("quotes", JSON.stringify(quotes));
+  showRandomQuote();
+  populateCategories();
+  postQuoteToServer(newQuote);
 }
 
 // ---------------- Category Filter ----------------
@@ -45,7 +57,7 @@ function populateCategories() {
 function filterQuote(event) {
   currentCategory = event.target.value;
   localStorage.setItem("selectedCategory", currentCategory);
-  displayRandomQuote();
+  showRandomQuote();
 }
 
 // ---------------- Import / Export ----------------
@@ -103,6 +115,7 @@ async function postQuoteToServer(newQuote) {
   }
 }
 
+// ---------------- Sync Quotes ----------------
 async function syncQuotes() {
   const serverQuotes = await fetchQuotesFromServer();
   let updated = false;
@@ -116,14 +129,14 @@ async function syncQuotes() {
 
   if (updated) {
     localStorage.setItem("quotes", JSON.stringify(quotes));
-    displayRandomQuote();
+    showRandomQuote();
     populateCategories();
     showNotification("New quotes fetched from server!");
     alert("Quotes synced with server!");
   }
 }
 
-// ---------------- UI Notification ----------------
+// ---------------- Notifications ----------------
 function showNotification(message) {
   let notification = document.getElementById("notification");
   if (!notification) {
@@ -145,16 +158,24 @@ function showNotification(message) {
 // ---------------- Initialization ----------------
 document.addEventListener("DOMContentLoaded", function () {
   populateCategories();
-  displayRandomQuote();
+  showRandomQuote();
 
+  // Event listeners
   document.getElementById("categoryFilter")?.addEventListener("change", filterQuote);
-  document.getElementById("nextQuoteBtn")?.addEventListener("click", displayRandomQuote);
+  document.getElementById("nextQuoteBtn")?.addEventListener("click", showRandomQuote);
   document.getElementById("exportBtn")?.addEventListener("click", () => exportToJsonFile(quotes));
+  document.getElementById("addQuoteBtn")?.addEventListener("click", () => {
+    const text = document.getElementById("newQuoteText").value.trim();
+    const cat = document.getElementById("newQuoteCategory").value.trim() || "General";
+    addQuote(text, cat);
+    document.getElementById("newQuoteText").value = "";
+    document.getElementById("newQuoteCategory").value = "";
+  });
   document.getElementById("jsonFileInput")?.addEventListener("change", event => {
     importFromJsonFile(event, importedQuotes => {
       quotes = importedQuotes;
       localStorage.setItem("quotes", JSON.stringify(quotes));
-      displayRandomQuote();
+      showRandomQuote();
       populateCategories();
     });
   });
