@@ -26,17 +26,6 @@ function showRandomQuote() {
   sessionStorage.setItem("lastViewedQuoteIndex", randomIndex);
 }
 
-// ---------------- Add New Quote ----------------
-function addQuote(newQuoteText, category = "General") {
-  if (!newQuoteText) return;
-  const newQuote = { text: newQuoteText, category };
-  quotes.push(newQuote);
-  localStorage.setItem("quotes", JSON.stringify(quotes));
-  showRandomQuote();
-  populateCategories();
-  postQuoteToServer(newQuote);
-}
-
 // ---------------- Category Filter ----------------
 function populateCategories() {
   const categoryFilter = document.getElementById("categoryFilter");
@@ -155,6 +144,46 @@ function showNotification(message) {
   setTimeout(() => notification.remove(), 3000);
 }
 
+// ---------------- Add Quote Form ----------------
+function createAddQuoteForm() {
+  const container = document.createElement("div");
+
+  const textInput = document.createElement("input");
+  textInput.type = "text";
+  textInput.id = "newQuoteText";
+  textInput.placeholder = "Enter new quote";
+
+  const categoryInput = document.createElement("input");
+  categoryInput.type = "text";
+  categoryInput.id = "newQuoteCategory";
+  categoryInput.placeholder = "Category";
+
+  const addButton = document.createElement("button");
+  addButton.id = "addQuoteBtn";
+  addButton.textContent = "Add Quote";
+
+  addButton.addEventListener("click", () => {
+    const text = textInput.value.trim();
+    const cat = categoryInput.value.trim() || "General";
+    if (!text) return;
+    quotes.push({ text, category: cat });
+    localStorage.setItem("quotes", JSON.stringify(quotes));
+    showRandomQuote();
+    populateCategories();
+    postQuoteToServer({ text, category: cat });
+
+    // Clear inputs
+    textInput.value = "";
+    categoryInput.value = "";
+  });
+
+  container.appendChild(textInput);
+  container.appendChild(categoryInput);
+  container.appendChild(addButton);
+
+  document.querySelector("main").appendChild(container);
+}
+
 // ---------------- Initialization ----------------
 document.addEventListener("DOMContentLoaded", function () {
   populateCategories();
@@ -164,13 +193,6 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("categoryFilter")?.addEventListener("change", filterQuote);
   document.getElementById("nextQuoteBtn")?.addEventListener("click", showRandomQuote);
   document.getElementById("exportBtn")?.addEventListener("click", () => exportToJsonFile(quotes));
-  document.getElementById("addQuoteBtn")?.addEventListener("click", () => {
-    const text = document.getElementById("newQuoteText").value.trim();
-    const cat = document.getElementById("newQuoteCategory").value.trim() || "General";
-    addQuote(text, cat);
-    document.getElementById("newQuoteText").value = "";
-    document.getElementById("newQuoteCategory").value = "";
-  });
   document.getElementById("jsonFileInput")?.addEventListener("change", event => {
     importFromJsonFile(event, importedQuotes => {
       quotes = importedQuotes;
@@ -180,6 +202,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // Periodic server sync every 30s
+  // Create dynamic add quote form
+  createAddQuoteForm();
+
+  // Periodic server sync
   setInterval(syncQuotes, 30000);
 });
